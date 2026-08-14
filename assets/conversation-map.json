@@ -35,6 +35,7 @@
     "roommateAvenues": "Here are your best bets for finding a roommate in Chicago! 🏙️\n\n📘 Facebook Groups — search 'Chicago Roommates' or 'Chicago Housing' for active communities\n🌐 Roomies.com — post a listing and browse matches\n📋 Craigslist Chicago — classic and still very active\n💬 SpareRoom — popular app for finding rooms and roommates\n\nAre you on Facebook? I can point you to the best Chicago roommate groups!",
     "roommateFacebook": "Love it! Here are the top Facebook groups to join for Chicago roommates:\n\n• Chicago Roommates and Rooms For Rent — large, very active group\n• Chicago Housing, Rooms and Roommates — great mix of renters\n• Chicago Young Professionals Housing — perfect for ages 21-35\n• Roommates in Chicago (All Areas) — citywide listings\n\nPro tip: Post a short intro with your budget, preferred area, and move-in date to get the best responses! 🌟",
     "about": "We're Star Homes — a Chicago crew helping people find places they actually want to live. Renting, buying, all of it. 🏙️",
+    "resetHint": "Tip: type \"reset\" at any point to start over.",
     "restart": "No problem, starting fresh! ✨",
     "fallback1": "Hmm, didn't quite catch that! 🤔 Try one of these:",
     "fallback2": "Still not getting it — my bad! Tap a button below and I'll take it from there. 👇"
@@ -72,7 +73,7 @@
   },
 
   "outputs": {
-    "welcome":    { "text": ["greeting", "capabilities", "cta"], "options": ["go", "roommateBtn", "about"] },
+    "welcome":    { "text": ["greeting", "capabilities", "cta", "resetHint"], "options": ["go", "roommateBtn", "about", "fbOffer"] },
     "menu":       { "text": ["capabilities", "cta"],             "options": ["go", "roommateBtn", "about"] },
     "start":      { "text": ["start"],  "options": [], "startFlow": "propertySearch" },
     "lender":     { "text": ["lender"], "options": ["go", "menu"] },
