@@ -1,0 +1,52 @@
+{
+  "settings": {
+    "botName": "Cassie",
+    "teaser": "Hey! 👋 Looking for a place in Chicago?",
+    "firstOutput": "welcome",
+    "joinWith": "\n\n"
+  },
+
+  "text": {
+    "greeting": "Hey! 👋 I'm Cassie, your Star Homes guide.",
+    "capabilities": "Here's what I've got:\n\n🏠 Find you a place to rent or buy\n💸 Match you with a lender — coming soon\n🛋️ Help you find a roommate — coming soon",
+    "cta": "Chicago's got options. Ready to find yours?",
+    "start": "Let's do it! 🔥",
+    "lender": "Ooh, good call — lender matching is coming soon! 🔜\n\nRight now I'm all about finding you a place. Want to start there?",
+    "roommate": "Roommate matching is on the way! 🔜\n\nFor now, let's get you a place — you can always add a roommate to the mix later.",
+    "about": "We're Star Homes — a Chicago crew helping people find places they actually want to live. Renting, buying, all of it. 🏙️",
+    "restart": "No problem, starting fresh! ✨",
+    "fallback1": "Hmm, didn't quite catch that! 🤔 Try one of these:",
+    "fallback2": "Still not getting it — my bad! Tap a button below and I'll take it from there. 👇"
+  },
+
+  "options": {
+    "go": { "label": "Let's go 🔎", "output": "start" },
+    "findPlace": { "label": "Find me a place", "output": "start" },
+    "about": { "label": "What's Star Homes?", "output": "about" },
+    "menu": { "label": "Show me the menu", "output": "menu" },
+    "whatCanYouDo": { "label": "What can you do?", "output": "menu" }
+  },
+
+  "outputs": {
+    "welcome": { "text": ["greeting", "capabilities", "cta"], "options": ["go", "about"] },
+    "menu": { "text": ["capabilities", "cta"], "options": ["go", "about"] },
+    "start": { "text": ["start"], "options": [], "event": "START_SEARCH" },
+    "lender": { "text": ["lender"], "options": ["go", "menu"] },
+    "roommate": { "text": ["roommate"], "options": ["findPlace", "menu"] },
+    "about": { "text": ["about"], "options": ["findPlace", "menu"] },
+    "restart": { "text": ["restart", "capabilities", "cta"], "options": ["go", "about"] },
+    "fallback1": { "text": ["fallback1"], "options": ["findPlace", "whatCanYouDo"] },
+    "fallback2": { "text": ["fallback2"], "options": ["findPlace", "whatCanYouDo"] }
+  },
+
+  "inputs": [
+    { "keywords": ["start over", "restart", "go back", "never mind", "nevermind", "reset"], "output": "restart" },
+    { "keywords": ["menu", "help", "options", "what can you do", "what do you do"], "output": "menu" },
+    { "keywords": ["lender", "loan", "mortgage", "financing", "finance", "credit", "afford"], "output": "lender" },
+    { "keywords": ["roommate", "roomie", "housemate", "share a place", "sharing"], "output": "roommate" },
+    { "keywords": ["star homes", "about you", "who are you", "what is this", "company"], "output": "about" },
+    { "keywords": ["let's go", "lets go", "yes", "yeah", "yep", "sure", "start", "find", "place", "apartment", "rent", "buy", "looking", "search", "browse"], "output": "start" }
+  ],
+
+  "fallback": ["fallback1", "fallback2"]
+}
