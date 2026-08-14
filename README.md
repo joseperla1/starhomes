@@ -1,18 +1,30 @@
 # Starhomes
 ## Chatbot
 
-Conversation content lives in `conversation-map.json`. No logic in the repo yet —
-this is data only, pending widget integration.
+Conversation content lives in `conversation-map.json`. Data only — no logic in
+the repo yet.
 
-**Structure**
-- `inputs` — keyword arrays → output id. First match wins.
-- `outputs` — text keys to join + option keys to show.
-- `text` / `options` — reusable pieces.
+**Sections**
+- `text` / `options` — reusable strings and buttons
+- `outputs` — what to say: text keys to join + option keys to show
+- `inputs` — keyword arrays → output id
+- `globalInputs` — checked before everything else, so exits work mid-flow
+- `flows` — ordered steps, each saving an answer to a named slot
+- `prefill` — fills slots from the opening message
+- `handlers` — contract for JS functions the map calls
 
-Buttons and typed input both resolve to an output id, so both go through one handler.
+Buttons and typed input both resolve to an output id — one handler path.
 
 **Gotchas**
 - `inputs` is ordered specific→general. Don't reorder or prepend.
-- `fallback` escalates on consecutive misses; reset the counter on any match.
+- `globalInputs` must be tested before step parsing, or "never mind" gets read
+  as a bedroom count.
+- `fallback` escalates on consecutive misses; reset on any match.
 
-Copy edits: `text` only. Bot name: `settings.botName` and the `greeting` string.
+**Parse types:** `choice`, `number` ($, commas, "2k"), `text`, `bedrooms`
+("studio" → 0).
+
+**Open:** `searchListings` signature is provisional — confirm against the
+implementation. `relaxed: true` assumes it can loosen budget constraints.
+
+Copy edits: `text` only. Bot name: `settings.botName` + the `greeting` string.
