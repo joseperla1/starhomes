@@ -149,10 +149,15 @@
   function scrollBottom() { refs.messages.scrollTop = refs.messages.scrollHeight; }
 
   function saveHistory() {
-    const msgs = Array.from(refs.messages.children).map(m => ({
-      type: m.classList.contains('cassie-msg--user') ? 'user' : 'bot',
-      html: m.querySelector('.cassie-bubble').innerHTML
-    }));
+    const msgs = Array.from(refs.messages.children)
+      .filter((node) => node.classList && node.classList.contains('cassie-msg'))
+      .map((m) => {
+        const bubble = m.querySelector('.cassie-bubble');
+        return {
+          type: m.classList.contains('cassie-msg--user') ? 'user' : 'bot',
+          html: bubble ? bubble.innerHTML : ''
+        };
+      });
     sessionStorage.setItem(HISTORY_KEY, JSON.stringify(msgs));
   }
 
