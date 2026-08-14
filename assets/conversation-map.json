@@ -1,6 +1,6 @@
 {
   "settings": {
-    "botName": "Stella",
+    "botName": "Cassie",
     "teaser": "Hey! 👋 Looking for a place in Chicago?",
     "firstOutput": "welcome",
     "joinWith": "\n\n"
@@ -14,7 +14,7 @@
   },
 
   "text": {
-    "greeting": "Hey! 👋 I'm Stella, your Star Homes guide.",
+    "greeting": "Hey! 👋 I'm Cassie, your Star Homes guide.",
     "capabilities": "Here's what I've got:\n\n🏠 Find you a place to rent or buy\n💸 Match you with a lender — coming soon\n🛋️ Help you find a roommate — coming soon",
     "cta": "Chicago's got options. Ready to find yours?",
     "start": "Let's do it! 🔥",
