@@ -16,12 +16,51 @@
     '</svg>'
   );
 
+  const apartmentAreas = ['Wicker Park', 'River North', 'Logan Square', 'Lakeview', 'Old Town', 'West Loop', 'Pilsen'];
+  const houseAreas = ['Lincoln Park', 'Bucktown', 'Andersonville', 'Hyde Park', 'Bronzeville', 'Roscoe Village', 'Ravenswood', 'Bridgeport', 'South Loop', 'Uptown', 'Avondale', 'Irving Park'];
+  const apartmentNames = [
+    'Milwaukee Ave Modern Studio',
+    'River North Skyline Loft',
+    'Logan Square Brick Retreat',
+    'Lakeview Sunlit 2BR',
+    'Old Town Courtyard Flat',
+    'West Loop Corner Residence',
+    'Pilsen Artist Loft'
+  ];
+  const houseNames = [
+    'Lincoln Park Classic Townhome',
+    'Bucktown Designer Row House',
+    'Andersonville Family Home',
+    'Hyde Park Heritage Residence',
+    'Bronzeville Cornerstone Home',
+    'Roscoe Village Garden House',
+    'Ravenswood Tree-Lined Home',
+    'Bridgeport Renovated Brick House',
+    'South Loop Urban Townhouse',
+    'Uptown Landmark Home',
+    'Avondale Modern Single-Family',
+    'Irving Park Spacious Estate'
+  ];
+
   const demoListings = [
-    { title: 'Modern Studio', area: 'Wicker Park', price: 1850, type: 'Rent', beds: 'Studio', baths: '1 bath', image: 'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=900&q=80' },
-    { title: '2BR Lincoln Park Condo', area: 'Lincoln Park', price: 389000, type: 'Buy', beds: '2 beds', baths: '2 baths', image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=900&q=80' },
-    { title: '1BR River North Loft', area: 'River North', price: 2200, type: 'Rent', beds: '1 bed', baths: '1 bath', image: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=900&q=80' },
-    { title: '3BR Gold Coast Townhome', area: 'Gold Coast', price: 520000, type: 'Buy', beds: '3 beds', baths: '2 baths', image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=80' },
-    { title: 'Loft in Logan Square', area: 'Logan Square', price: 1950, type: 'Rent', beds: '1 bed', baths: '1 bath', image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80' }
+    ...Array.from({ length: 7 }, (_, i) => ({
+      title: apartmentNames[i] || `Apartment ${i + 1}`,
+      area: apartmentAreas[i] || 'Chicago',
+      price: 1650 + (i * 140),
+      type: 'Rent',
+      beds: i % 3 === 0 ? 'Studio' : `${(i % 3) + 1} bed${(i % 3) + 1 > 1 ? 's' : ''}`,
+      baths: i % 2 === 0 ? '1 bath' : '2 baths',
+      image: `assets/apartment${i + 1}.jpg`
+    })),
+    ...Array.from({ length: 12 }, (_, i) => ({
+      title: houseNames[i] || `House ${i + 1}`,
+      area: houseAreas[i] || 'Chicago',
+      price: 345000 + (i * 28000),
+      type: 'Buy',
+      beds: `${3 + (i % 3)} beds`,
+      baths: `${2 + (i % 2)} baths`,
+      image: `assets/house${i + 1}.jpg`
+    }))
   ];
 
   const map = {"settings":{"botName":"Stella","teaser":"Hey! 👋 Looking for a place in Chicago?","firstOutput":"welcome","joinWith":"\n\n"},"handlers":{"searchListings":{"receives":{"mode":"rent|buy","budget":"number|null","bedrooms":"number|null","area":"string|null","relaxed":"boolean"},"returns":"array of { type, price, area } — empty array means no match"}},"text":{"greeting":"Hey! 👋 I'm Stella, your Star Homes guide.","capabilities":"Here's what I've got:\n\n🏠 Find you a place to rent or buy\n💸 Match you with a lender — coming soon\n🛋️ Help you find a roommate — coming soon","cta":"Chicago's got options. Ready to find yours?","start":"Let's do it! 🔥","askMode":"First things first — are you looking to rent or buy?","askBudget":"Got it! What's your monthly budget? (No worries if you're not sure — just give me a ballpark)","askBedrooms":"How many bedrooms do you need? (Studios count too!)","askArea":"Any particular neighbourhood you have your eye on? Or should I search city-wide?","searching":"Perfect — let me pull up some options for you! 🏠","results":"Here's what I found:","afterResults":"Nice pick! Want more info on one, similar places, or shall we talk next steps?","noMatch":"Nothing matching exactly — but I've got options just a little over budget. Want to see those, or should I widen the search area?","stillNoMatch":"Still nothing, sorry! 😕 Want to try a different budget or area?","lender":"Ooh, good call — lender matching is coming soon! 🔜\n\nRight now I'm all about finding you a place. Want to start there?","roommate":"Roommate matching is on the way! 🔜\n\nFor now, let's get you a place — you can always add a roommate to the mix later.","about":"We're Star Homes — a Chicago crew helping people find places they actually want to live. Renting, buying, all of it. 🏙️","restart":"No problem, starting fresh! ✨","fallback1":"Hmm, didn't quite catch that! 🤔 Try one of these:","fallback2":"Still not getting it — my bad! Tap a button below and I'll take it from there. 👇","fbIntro":"I can connect your Facebook Messenger account so you receive property updates and can message us directly! 📱\n\nTap the button below to link your account — it only takes a moment."},"options":{"go":{"label":"Let's go 🔎","output":"start"},"findPlace":{"label":"Find me a place","output":"start"},"about":{"label":"What's Star Homes?","output":"about"},"menu":{"label":"Show me the menu","output":"menu"},"whatCanYouDo":{"label":"What can you do?","output":"menu"},"showOver":{"label":"Show me those","output":"searchRelaxed"},"widen":{"label":"Widen the search","output":"askAreaAgain"},"fbOffer":{"label":"Connect Messenger 📱","output":"fbMessenger"},"fbConnect":{"label":"Connect Facebook","output":"fbMessenger"}},"outputs":{"welcome":{"text":["greeting","capabilities","cta"],"options":["go","about","fbOffer"]},"menu":{"text":["capabilities","cta"],"options":["go","about","fbOffer"]},"start":{"text":["start"],"options":[],"startFlow":"propertySearch"},"lender":{"text":["lender"],"options":["go","menu"]},"roommate":{"text":["roommate"],"options":["findPlace","menu"]},"about":{"text":["about"],"options":["findPlace","menu"]},"restart":{"text":["restart","capabilities","cta"],"options":["go","about"],"clearAnswers":true},"fallback1":{"text":["fallback1"],"options":["findPlace","whatCanYouDo"]},"fallback2":{"text":["fallback2"],"options":["findPlace","whatCanYouDo"]},"results":{"text":["results"],"options":[],"renderListings":true,"then":"afterResults"},"afterResults":{"text":["afterResults"],"options":[]},"noMatch":{"text":["noMatch"],"options":["showOver","widen"]},"stillNoMatch":{"text":["stillNoMatch"],"options":["findPlace","menu"]},"searchRelaxed":{"text":["searching"],"options":[],"call":"searchListings","relaxed":true,"onResults":"results","onEmpty":"stillNoMatch"},"askAreaAgain":{"text":["askArea"],"options":[],"resumeFlow":"propertySearch","atStep":"area"},"fbMessenger":{"text":["fbIntro"],"options":["fbConnect"]}},"flows":{"propertySearch":{"firstStep":"mode","prefillFromInput":true,"steps":{"mode":{"ask":"askMode","options":[{"label":"Rent","value":"rent"},{"label":"Buy","value":"buy"}],"save":"mode","parse":"choice","next":"budget"},"budget":{"ask":"askBudget","options":[{"label":"Under $1,500","value":1500},{"label":"$1,500–2,500","value":2500},{"label":"Not sure","value":null}],"save":"budget","parse":"number","optional":true,"next":"bedrooms"},"bedrooms":{"ask":"askBedrooms","options":[{"label":"Studio","value":0},{"label":"1","value":1},{"label":"2","value":2},{"label":"3+","value":3}],"save":"bedrooms","parse":"number","next":"area"},"area":{"ask":"askArea","options":[{"label":"City-wide","value":null}],"save":"area","parse":"text","optional":true,"next":null}},"onComplete":{"text":["searching"],"call":"searchListings","onResults":"results","onEmpty":"noMatch"}}},"globalInputs":[{"keywords":["start over","restart","go back","never mind","nevermind","reset"],"output":"restart"},{"keywords":["menu","help","options","what can you do","what do you do"],"output":"menu"}],"inputs":[{"keywords":["lender","loan","mortgage","financing","finance","credit","afford"],"output":"lender"},{"keywords":["roommate","roomie","housemate","share a place","sharing"],"output":"roommate"},{"keywords":["star homes","about you","who are you","what is this","company"],"output":"about"},{"keywords":["let's go","lets go","yes","yeah","yep","sure","start","find","place","apartment","rent","buy","looking","search","browse"],"output":"start"}],"prefill":[{"slot":"budget","parse":"number"},{"slot":"mode","parse":"choice","match":{"rent":["rent","renting","rental"],"buy":["buy","buying","purchase","own"]}},{"slot":"bedrooms","parse":"bedrooms"}],"fallback":["fallback1","fallback2"]};
@@ -210,7 +249,7 @@
   function renderListings(listings) {
     const wrapper = el('div', { className: 'cassie-listings' });
 
-    (listings || []).slice(0, 5).forEach((listing) => {
+    (listings || []).forEach((listing) => {
       const card = el('article', { className: 'cassie-listing-card' });
 
       const imgWrap = el('div', { className: 'cassie-listing-image' });
@@ -439,7 +478,7 @@
   function init() {
     chat = window.StarChat.createChat(map, {
       searchListings: function () {
-        return demoListings.slice(0, 5);
+        return demoListings;
       }
     });
     refs = buildWidget();
