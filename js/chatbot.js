@@ -52,7 +52,7 @@
     'Irving Park Spacious Estate'
   ];
 
-  const demoListings = [
+  const localImageListings = [
     ...Array.from({ length: 7 }, (_, i) => ({
       title: apartmentNames[i] || `Apartment ${i + 1}`,
       area: apartmentAreas[i] || 'Chicago',
@@ -72,6 +72,120 @@
       image: `assets/house${i + 1}.jpg`
     }))
   ];
+
+  const supplementalListings = [
+    { title: 'Uptown Efficient Studio', area: 'Uptown', price: 1250, type: 'Rent', beds: 'Studio', baths: '1 bath', image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80' },
+    { title: 'Rogers Park Starter Studio', area: 'Rogers Park', price: 1395, type: 'Rent', beds: 'Studio', baths: '1 bath', image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=900&q=80' },
+    { title: 'Avondale Cozy 1BR', area: 'Avondale', price: 1475, type: 'Rent', beds: '1 bed', baths: '1 bath', image: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=900&q=80' },
+    { title: 'Pilsen 2BR Value Flat', area: 'Pilsen', price: 1490, type: 'Rent', beds: '2 beds', baths: '1 bath', image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=900&q=80' },
+    { title: 'Lakeview Classic 3BR Rental', area: 'Lakeview', price: 2480, type: 'Rent', beds: '3 beds', baths: '2 baths', image: 'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=900&q=80' },
+    { title: 'West Loop Family 3BR Rental', area: 'West Loop', price: 2395, type: 'Rent', beds: '3 beds', baths: '2 baths', image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=900&q=80' },
+
+    { title: 'South Loop Entry Condo', area: 'South Loop', price: 289000, type: 'Buy', beds: '1 bed', baths: '1 bath', image: 'https://images.unsplash.com/photo-1515263487990-61b07816b324?auto=format&fit=crop&w=900&q=80' },
+    { title: 'Ukrainian Village 1BR Condo', area: 'Ukrainian Village', price: 332000, type: 'Buy', beds: '1 bed', baths: '1 bath', image: 'https://images.unsplash.com/photo-1501876725168-00c445821c9e?auto=format&fit=crop&w=900&q=80' },
+    { title: 'Hyde Park 2BR Condo', area: 'Hyde Park', price: 355000, type: 'Buy', beds: '2 beds', baths: '2 baths', image: 'https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=900&q=80' },
+    { title: 'Bridgeport 2BR Townhome', area: 'Bridgeport', price: 372000, type: 'Buy', beds: '2 beds', baths: '2 baths', image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80' },
+    { title: 'Irving Park 3BR Starter Home', area: 'Irving Park', price: 418000, type: 'Buy', beds: '3 beds', baths: '2 baths', image: 'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?auto=format&fit=crop&w=900&q=80' },
+    { title: 'Portage Park 4BR Renovated Home', area: 'Portage Park', price: 498000, type: 'Buy', beds: '4 beds', baths: '3 baths', image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=80' }
+  ];
+
+  const demoListings = [...localImageListings, ...supplementalListings];
+
+  function parseBedsCount(bedsLabel) {
+    if (!bedsLabel) return null;
+    if (/studio/i.test(String(bedsLabel))) return 0;
+    const m = String(bedsLabel).match(/\d+/);
+    return m ? parseInt(m[0], 10) : null;
+  }
+
+  function normalizeBuyBudget(budget) {
+    if (budget === null || budget === undefined) return null;
+    if (budget >= 10000) return budget;
+    // The chat asks monthly budget; for buy mode, map to a rough purchase cap.
+    return budget * 250;
+  }
+
+  function filterListingsByPrefs(allListings, prefs) {
+    const mode = prefs && prefs.mode ? String(prefs.mode).toLowerCase() : null;
+    const budget = prefs && prefs.budget !== undefined ? prefs.budget : null;
+    const bedrooms = prefs && prefs.bedrooms !== undefined ? prefs.bedrooms : null;
+    const area = prefs && prefs.area ? String(prefs.area).trim().toLowerCase() : '';
+    const relaxed = !!(prefs && prefs.relaxed);
+
+    const budgetCap = mode === 'buy'
+      ? normalizeBuyBudget(budget)
+      : (budget !== null && budget !== undefined ? budget : null);
+
+    function sortByBudgetProximity(listings) {
+      if (budgetCap === null || budgetCap === undefined) return listings;
+      return listings.slice().sort((a, b) => {
+        return Math.abs(Number(a.price) - budgetCap) - Math.abs(Number(b.price) - budgetCap);
+      });
+    }
+
+    function matchesBedrooms(count, tolerance, allowStudioFlex) {
+      if (bedrooms === null || bedrooms === undefined || count === null) return true;
+      if (bedrooms >= 3) return count >= (allowStudioFlex ? 2 : 3);
+      if (bedrooms === 0) {
+        if (allowStudioFlex) return count <= 1;
+        return count === 0;
+      }
+      return Math.abs(count - bedrooms) <= tolerance;
+    }
+
+    function applyFilter(config) {
+      const useMode = config.useMode !== false;
+      const useArea = config.useArea !== false;
+      const useBudget = config.useBudget !== false;
+      const useBedrooms = config.useBedrooms !== false;
+      const tolerance = config.tolerance || 0;
+      const budgetMultiplier = config.budgetMultiplier || 1;
+      const allowStudioFlex = !!config.allowStudioFlex;
+
+      return sortByBudgetProximity(
+        allListings.filter((listing) => {
+          const listingMode = String(listing.type || '').toLowerCase();
+          if (useMode && mode && listingMode !== mode) return false;
+
+          if (useBudget && budgetCap !== null && budgetCap !== undefined) {
+            if (Number(listing.price) > budgetCap * budgetMultiplier) return false;
+          }
+
+          if (useBedrooms) {
+            const count = parseBedsCount(listing.beds);
+            if (!matchesBedrooms(count, tolerance, allowStudioFlex)) return false;
+          }
+
+          if (useArea && area) {
+            const haystack = `${listing.area || ''} ${listing.title || ''}`.toLowerCase();
+            if (!haystack.includes(area)) return false;
+          }
+
+          return true;
+        })
+      );
+    }
+
+    const strictBudgetMultiplier = relaxed ? (mode === 'buy' ? 1.15 : 1.3) : 1;
+    const strictTolerance = relaxed ? 1 : 0;
+
+    const strategies = [
+      { useMode: true, useArea: true,  useBudget: true,  useBedrooms: true,  tolerance: strictTolerance, budgetMultiplier: strictBudgetMultiplier, allowStudioFlex: relaxed },
+      { useMode: true, useArea: false, useBudget: true,  useBedrooms: true,  tolerance: strictTolerance, budgetMultiplier: strictBudgetMultiplier, allowStudioFlex: relaxed },
+      { useMode: true, useArea: false, useBudget: true,  useBedrooms: true,  tolerance: strictTolerance + 1, budgetMultiplier: strictBudgetMultiplier * 1.1, allowStudioFlex: true },
+      { useMode: true, useArea: false, useBudget: true,  useBedrooms: false, tolerance: 2, budgetMultiplier: strictBudgetMultiplier * 1.2, allowStudioFlex: true },
+      { useMode: true, useArea: false, useBudget: false, useBedrooms: true,  tolerance: 2, budgetMultiplier: 99, allowStudioFlex: true },
+      { useMode: true, useArea: false, useBudget: false, useBedrooms: false, tolerance: 3, budgetMultiplier: 99, allowStudioFlex: true },
+      { useMode: false, useArea: false, useBudget: false, useBedrooms: false, tolerance: 3, budgetMultiplier: 99, allowStudioFlex: true }
+    ];
+
+    for (let i = 0; i < strategies.length; i++) {
+      const matches = applyFilter(strategies[i]);
+      if (matches.length) return matches;
+    }
+
+    return allListings;
+  }
 
   const map = {"settings":{"botName":"Stella","teaser":"Hey! 👋 Looking for a place in Chicago?","firstOutput":"welcome","joinWith":"\n\n"},"handlers":{"searchListings":{"receives":{"mode":"rent|buy","budget":"number|null","bedrooms":"number|null","area":"string|null","relaxed":"boolean"},"returns":"array of { type, price, area } — empty array means no match"}},"text":{"greeting":"Hey! 👋 I'm Stella, your Star Homes guide.","capabilities":"Here's what I've got:\n\n🏠 Find you a place to rent or buy\n💸 Match you with a lender — coming soon\n🛋️ Help you find a roommate — coming soon","cta":"Chicago's got options. Ready to find yours?","start":"Let's do it! 🔥","askMode":"First things first — are you looking to rent or buy?","askBudget":"Got it! What's your monthly budget? (No worries if you're not sure — just give me a ballpark)","askBedrooms":"How many bedrooms do you need? (Studios count too!)","askArea":"Any particular neighbourhood you have your eye on? Or should I search city-wide?","searching":"Perfect — let me pull up some options for you! 🏠","results":"Here's what I found:","afterResults":"Nice pick! Want more info on one, similar places, or shall we talk next steps?","noMatch":"Nothing matching exactly — but I've got options just a little over budget. Want to see those, or should I widen the search area?","stillNoMatch":"Still nothing, sorry! 😕 Want to try a different budget or area?","lender":"Ooh, good call — lender matching is coming soon! 🔜\n\nRight now I'm all about finding you a place. Want to start there?","roommate":"Roommate matching is on the way! 🔜\n\nFor now, let's get you a place — you can always add a roommate to the mix later.","about":"We're Star Homes — a Chicago crew helping people find places they actually want to live. Renting, buying, all of it. 🏙️","restart":"No problem, starting fresh! ✨","fallback1":"Hmm, didn't quite catch that! 🤔 Try one of these:","fallback2":"Still not getting it — my bad! Tap a button below and I'll take it from there. 👇","fbIntro":"I can connect your Facebook Messenger account so you receive property updates and can message us directly! 📱\n\nTap the button below to link your account — it only takes a moment."},"options":{"go":{"label":"Let's go 🔎","output":"start"},"findPlace":{"label":"Find me a place","output":"start"},"about":{"label":"What's Star Homes?","output":"about"},"menu":{"label":"Show me the menu","output":"menu"},"whatCanYouDo":{"label":"What can you do?","output":"menu"},"showOver":{"label":"Show me those","output":"searchRelaxed"},"widen":{"label":"Widen the search","output":"askAreaAgain"},"fbOffer":{"label":"Connect Facebook","output":"fbMessenger"},"fbConnect":{"label":"Connect Facebook","output":"fbMessenger"}},"outputs":{"welcome":{"text":["greeting","capabilities","cta"],"options":["go","about","fbOffer"]},"menu":{"text":["capabilities","cta"],"options":["go","about","fbOffer"]},"start":{"text":["start"],"options":[],"startFlow":"propertySearch"},"lender":{"text":["lender"],"options":["go","menu"]},"roommate":{"text":["roommate"],"options":["findPlace","menu"]},"about":{"text":["about"],"options":["findPlace","menu"]},"restart":{"text":["restart","capabilities","cta"],"options":["go","about"],"clearAnswers":true},"fallback1":{"text":["fallback1"],"options":["findPlace","whatCanYouDo"]},"fallback2":{"text":["fallback2"],"options":["findPlace","whatCanYouDo"]},"results":{"text":["results"],"options":[],"renderListings":true,"then":"afterResults"},"afterResults":{"text":["afterResults"],"options":[]},"noMatch":{"text":["noMatch"],"options":["showOver","widen"]},"stillNoMatch":{"text":["stillNoMatch"],"options":["findPlace","menu"]},"searchRelaxed":{"text":["searching"],"options":[],"call":"searchListings","relaxed":true,"onResults":"results","onEmpty":"stillNoMatch"},"askAreaAgain":{"text":["askArea"],"options":[],"resumeFlow":"propertySearch","atStep":"area"},"fbMessenger":{"text":["fbIntro"],"options":["fbConnect"]}},"flows":{"propertySearch":{"firstStep":"mode","prefillFromInput":true,"steps":{"mode":{"ask":"askMode","options":[{"label":"Rent","value":"rent"},{"label":"Buy","value":"buy"}],"save":"mode","parse":"choice","next":"budget"},"budget":{"ask":"askBudget","options":[{"label":"Under $1,500","value":1500},{"label":"$1,500–2,500","value":2500},{"label":"Not sure","value":null}],"save":"budget","parse":"number","optional":true,"next":"bedrooms"},"bedrooms":{"ask":"askBedrooms","options":[{"label":"Studio","value":0},{"label":"1","value":1},{"label":"2","value":2},{"label":"3+","value":3}],"save":"bedrooms","parse":"number","next":"area"},"area":{"ask":"askArea","options":[{"label":"City-wide","value":null}],"save":"area","parse":"text","optional":true,"next":null}},"onComplete":{"text":["searching"],"call":"searchListings","onResults":"results","onEmpty":"noMatch"}}},"globalInputs":[{"keywords":["start over","restart","go back","never mind","nevermind","reset"],"output":"restart"},{"keywords":["menu","help","options","what can you do","what do you do"],"output":"menu"}],"inputs":[{"keywords":["lender","loan","mortgage","financing","finance","credit","afford"],"output":"lender"},{"keywords":["roommate","roomie","housemate","share a place","sharing"],"output":"roommate"},{"keywords":["star homes","about you","who are you","what is this","company"],"output":"about"},{"keywords":["let's go","lets go","yes","yeah","yep","sure","start","find","place","apartment","rent","buy","looking","search","browse"],"output":"start"}],"prefill":[{"slot":"budget","parse":"number"},{"slot":"mode","parse":"choice","match":{"rent":["rent","renting","rental"],"buy":["buy","buying","purchase","own"]}},{"slot":"bedrooms","parse":"bedrooms"}],"fallback":["fallback1","fallback2"]};
 
@@ -487,8 +601,19 @@
 
   function init() {
     chat = window.StarChat.createChat(map, {
-      searchListings: function () {
-        return demoListings;
+      searchListings: function (prefs) {
+        const safePrefs = prefs || {};
+        try {
+          localStorage.setItem(PREFS_KEY, JSON.stringify({
+            type: safePrefs.mode || null,
+            budget: safePrefs.budget || null,
+            bedrooms: safePrefs.bedrooms || null,
+            area: safePrefs.area || null
+          }));
+        } catch (_) {
+          // Ignore storage failures to keep chat responsive.
+        }
+        return filterListingsByPrefs(demoListings, safePrefs);
       }
     });
     refs = buildWidget();
