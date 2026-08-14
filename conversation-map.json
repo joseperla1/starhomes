@@ -32,7 +32,9 @@
     "about": "We're Star Homes — a Chicago crew helping people find places they actually want to live. Renting, buying, all of it. 🏙️",
     "restart": "No problem, starting fresh! ✨",
     "fallback1": "Hmm, didn't quite catch that! 🤔 Try one of these:",
-    "fallback2": "Still not getting it — my bad! Tap a button below and I'll take it from there. 👇"
+    "fallback2": "Still not getting it — my bad! Tap a button below and I'll take it from there. 👇",
+    "connectFacebook": "Sure! Let me pull up the Facebook connect screen for you. 📱\n\nLinking your account lets Star Homes send you personalised property alerts and keeps your searches synced.",
+    "fbLinked": "Your Facebook account (@johnpork) is now linked to Star Homes! 🎉\n\nYou'll get personalised property alerts and all your searches will be saved automatically. Ready to find a place?"
   },
 
   "options": {
@@ -42,12 +44,13 @@
     "menu": { "label": "Show me the menu", "output": "menu" },
     "whatCanYouDo": { "label": "What can you do?", "output": "menu" },
     "showOver": { "label": "Show me those", "output": "searchRelaxed" },
-    "widen": { "label": "Widen the search", "output": "askAreaAgain" }
+    "widen": { "label": "Widen the search", "output": "askAreaAgain" },
+    "connectFb": { "label": "Connect Facebook 🔗", "output": "connectFacebook" }
   },
 
   "outputs": {
-    "welcome": { "text": ["greeting", "capabilities", "cta"], "options": ["go", "about"] },
-    "menu": { "text": ["capabilities", "cta"], "options": ["go", "about"] },
+    "welcome": { "text": ["greeting", "capabilities", "cta"], "options": ["go", "about", "connectFb"] },
+    "menu": { "text": ["capabilities", "cta"], "options": ["go", "about", "connectFb"] },
     "start": { "text": ["start"], "options": [], "startFlow": "propertySearch" },
     "lender": { "text": ["lender"], "options": ["go", "menu"] },
     "roommate": { "text": ["roommate"], "options": ["findPlace", "menu"] },
@@ -60,7 +63,9 @@
     "noMatch": { "text": ["noMatch"], "options": ["showOver", "widen"] },
     "stillNoMatch": { "text": ["stillNoMatch"], "options": ["findPlace", "menu"] },
     "searchRelaxed": { "text": ["searching"], "options": [], "call": "searchListings", "relaxed": true, "onResults": "results", "onEmpty": "stillNoMatch" },
-    "askAreaAgain": { "text": ["askArea"], "options": [], "resumeFlow": "propertySearch", "atStep": "area" }
+    "askAreaAgain": { "text": ["askArea"], "options": [], "resumeFlow": "propertySearch", "atStep": "area" },
+    "connectFacebook": { "text": ["connectFacebook"], "options": [], "event": "FACEBOOK_CONNECT" },
+    "fbLinked": { "text": ["fbLinked"], "options": ["go", "menu"] }
   },
 
   "flows": {
@@ -131,7 +136,8 @@
     { "keywords": ["lender", "loan", "mortgage", "financing", "finance", "credit", "afford"], "output": "lender" },
     { "keywords": ["roommate", "roomie", "housemate", "share a place", "sharing"], "output": "roommate" },
     { "keywords": ["star homes", "about you", "who are you", "what is this", "company"], "output": "about" },
-    { "keywords": ["let's go", "lets go", "yes", "yeah", "yep", "sure", "start", "find", "place", "apartment", "rent", "buy", "looking", "search", "browse"], "output": "start" }
+    { "keywords": ["let's go", "lets go", "yes", "yeah", "yep", "sure", "start", "find", "place", "apartment", "rent", "buy", "looking", "search", "browse"], "output": "start" },
+    { "keywords": ["connect facebook", "connect my facebook", "link facebook", "facebook messenger", "connect messenger", "connect to facebook", "facebook account", "link my facebook", "connect social", "sign in with facebook", "login with facebook"], "output": "connectFacebook" }
   ],
 
   "prefill": [

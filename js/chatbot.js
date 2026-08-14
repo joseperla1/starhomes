@@ -231,6 +231,9 @@
       if (output.event === 'START_SEARCH') {
         startSearch();
       }
+      if (output.event === 'FACEBOOK_CONNECT') {
+        setTimeout(showFacebookModal, 500);
+      }
     }, 900);
   }
 
@@ -239,6 +242,259 @@
       addMessage('Here are some of our featured properties — scroll down to browse, or tell me what you\'re looking for! 🏙️', 'bot');
       setQuickReplies(['menu', 'about']);
     }, 700);
+  }
+
+  /* ---------- Facebook Connect Modal ---------- */
+
+  function showFacebookModal() {
+    const pigSvg = [
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">',
+        '<circle cx="40" cy="40" r="40" fill="#F9C0D0"/>',
+        '<circle cx="27" cy="31" r="5.5" fill="#2d2d2d"/>',
+        '<circle cx="53" cy="31" r="5.5" fill="#2d2d2d"/>',
+        '<circle cx="29" cy="29" r="2.2" fill="#fff"/>',
+        '<circle cx="55" cy="29" r="2.2" fill="#fff"/>',
+        '<ellipse cx="40" cy="53" rx="15" ry="10" fill="#F0A0BB"/>',
+        '<ellipse cx="33.5" cy="54" rx="4" ry="3.8" fill="#C86080"/>',
+        '<ellipse cx="46.5" cy="54" rx="4" ry="3.8" fill="#C86080"/>',
+      '</svg>'
+    ].join('');
+    const JOHN_PORK_AVATAR = 'data:image/svg+xml;base64,' + btoa(pigSvg);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'fb-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Connect your Facebook account');
+
+    const modal = document.createElement('div');
+    modal.className = 'fb-modal';
+    overlay.appendChild(modal);
+
+    function makeFbLogo() {
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.setAttribute('class', 'fb-logo-icon');
+      svg.setAttribute('aria-hidden', 'true');
+      svg.innerHTML = '<path fill="#fff" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>';
+      return svg;
+    }
+
+    function makeHeader(onClose) {
+      const header = document.createElement('div');
+      header.className = 'fb-header';
+
+      const logoWrap = document.createElement('div');
+      logoWrap.className = 'fb-header-logo';
+      logoWrap.appendChild(makeFbLogo());
+      const wm = document.createElement('span');
+      wm.className = 'fb-wordmark';
+      wm.textContent = 'facebook';
+      logoWrap.appendChild(wm);
+      header.appendChild(logoWrap);
+
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'fb-header-close';
+      closeBtn.setAttribute('aria-label', 'Close');
+      closeBtn.textContent = '×';
+      closeBtn.addEventListener('click', onClose);
+      header.appendChild(closeBtn);
+
+      return header;
+    }
+
+    function dismiss() {
+      overlay.classList.add('fb-overlay--closing');
+      setTimeout(() => overlay.remove(), 300);
+    }
+
+    function renderScreen1() {
+      modal.innerHTML = '';
+      modal.appendChild(makeHeader(dismiss));
+
+      const body = document.createElement('div');
+      body.className = 'fb-body';
+
+      const title = document.createElement('h2');
+      title.className = 'fb-title';
+      title.textContent = 'Log in with Facebook';
+      body.appendChild(title);
+
+      const sub = document.createElement('p');
+      sub.className = 'fb-subtitle';
+      sub.textContent = 'Star Homes is requesting access to your Facebook account.';
+      body.appendChild(sub);
+
+      /* Profile card */
+      const card = document.createElement('div');
+      card.className = 'fb-profile-card';
+
+      const pic = document.createElement('img');
+      pic.src = JOHN_PORK_AVATAR;
+      pic.alt = 'John Pork';
+      pic.className = 'fb-profile-pic';
+      card.appendChild(pic);
+
+      const info = document.createElement('div');
+      info.className = 'fb-profile-info';
+      const nameEl = document.createElement('span');
+      nameEl.className = 'fb-profile-name';
+      nameEl.textContent = 'John Pork';
+      const handleEl = document.createElement('span');
+      handleEl.className = 'fb-profile-handle';
+      handleEl.textContent = '@johnpork';
+      info.appendChild(nameEl);
+      info.appendChild(handleEl);
+      card.appendChild(info);
+
+      const checkDiv = document.createElement('div');
+      checkDiv.className = 'fb-profile-check';
+      const checkSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      checkSvg.setAttribute('viewBox', '0 0 24 24');
+      checkSvg.setAttribute('aria-hidden', 'true');
+      checkSvg.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+      checkDiv.appendChild(checkSvg);
+      card.appendChild(checkDiv);
+      body.appendChild(card);
+
+      const continueBtn = document.createElement('button');
+      continueBtn.className = 'fb-btn-primary';
+      continueBtn.textContent = 'Continue as John Pork';
+      continueBtn.addEventListener('click', renderScreen2);
+      body.appendChild(continueBtn);
+
+      const switchBtn = document.createElement('button');
+      switchBtn.className = 'fb-switch-link';
+      switchBtn.textContent = 'Not you? Switch accounts';
+
+      const switchMsg = document.createElement('span');
+      switchMsg.className = 'fb-switch-msg';
+      switchMsg.hidden = true;
+      switchMsg.textContent = 'No other accounts found. Continue as John Pork.';
+
+      switchBtn.addEventListener('click', () => {
+        switchMsg.hidden = false;
+        switchBtn.disabled = true;
+        switchBtn.style.opacity = '.5';
+      });
+
+      body.appendChild(switchBtn);
+      body.appendChild(switchMsg);
+      modal.appendChild(body);
+
+      const footer = document.createElement('div');
+      footer.className = 'fb-footer';
+      footer.innerHTML = 'By continuing, Facebook will share your name, profile picture, and email address with Star Homes. <a href="#" onclick="return false">Privacy Policy</a> · <a href="#" onclick="return false">Terms of Service</a>';
+      modal.appendChild(footer);
+    }
+
+    function renderScreen2() {
+      modal.innerHTML = '';
+      modal.appendChild(makeHeader(dismiss));
+
+      const body = document.createElement('div');
+      body.className = 'fb-body';
+
+      const backBtn = document.createElement('button');
+      backBtn.className = 'fb-back-btn';
+      backBtn.textContent = '← Back';
+      backBtn.addEventListener('click', renderScreen1);
+      body.appendChild(backBtn);
+
+      const title = document.createElement('h2');
+      title.className = 'fb-title';
+      title.textContent = 'Star Homes would like to access:';
+      body.appendChild(title);
+
+      const perms = [
+        { icon: '👤', label: 'Your name and profile picture', desc: 'To personalise your account' },
+        { icon: '📧', label: 'Your email address',            desc: 'For alerts and sign-in'        },
+        { icon: '🏠', label: 'Property search history',       desc: 'To save and resume searches'   },
+      ];
+
+      const list = document.createElement('ul');
+      list.className = 'fb-permission-list';
+
+      perms.forEach(perm => {
+        const item = document.createElement('li');
+        item.className = 'fb-permission-item';
+
+        const icon = document.createElement('div');
+        icon.className = 'fb-perm-icon';
+        icon.textContent = perm.icon;
+        item.appendChild(icon);
+
+        const textDiv = document.createElement('div');
+        textDiv.className = 'fb-perm-text';
+        textDiv.textContent = perm.label;
+        const small = document.createElement('small');
+        small.textContent = perm.desc;
+        textDiv.appendChild(small);
+        item.appendChild(textDiv);
+
+        const toggle = document.createElement('div');
+        toggle.className = 'fb-perm-toggle';
+        toggle.setAttribute('aria-label', 'Enabled');
+        item.appendChild(toggle);
+
+        list.appendChild(item);
+      });
+
+      body.appendChild(list);
+
+      const allowBtn = document.createElement('button');
+      allowBtn.className = 'fb-btn-primary';
+      allowBtn.textContent = 'Allow';
+      allowBtn.addEventListener('click', renderScreen3);
+      body.appendChild(allowBtn);
+
+      const declineBtn = document.createElement('button');
+      declineBtn.className = 'fb-btn-secondary';
+      declineBtn.textContent = 'Decline';
+      declineBtn.addEventListener('click', dismiss);
+      body.appendChild(declineBtn);
+
+      modal.appendChild(body);
+
+      const footer = document.createElement('div');
+      footer.className = 'fb-footer';
+      footer.innerHTML = 'By clicking Allow, you agree to the <a href="#" onclick="return false">Facebook Platform Terms</a> and acknowledge the <a href="#" onclick="return false">Developer Policies</a>. You can remove app access in Facebook Settings at any time.';
+      modal.appendChild(footer);
+    }
+
+    function renderScreen3() {
+      modal.innerHTML = '';
+      modal.appendChild(makeHeader(() => {})); /* close disabled during linking */
+
+      const loading = document.createElement('div');
+      loading.className = 'fb-loading';
+
+      const spinner = document.createElement('div');
+      spinner.className = 'fb-spinner';
+      loading.appendChild(spinner);
+
+      const loadingText = document.createElement('p');
+      loadingText.className = 'fb-loading-text';
+      loadingText.textContent = 'Linking your account…';
+      loading.appendChild(loadingText);
+
+      modal.appendChild(loading);
+
+      /* After 1.8 s close and fire Cassie's success message */
+      setTimeout(() => {
+        overlay.classList.add('fb-overlay--closing');
+        setTimeout(() => {
+          overlay.remove();
+          resolveOutput('fbLinked');
+        }, 300);
+      }, 1800);
+    }
+
+    renderScreen1();
+    document.body.appendChild(overlay);
+
+    /* Click outside modal to dismiss */
+    overlay.addEventListener('click', e => { if (e.target === overlay) dismiss(); });
   }
 
   function matchKeywords(text) {
