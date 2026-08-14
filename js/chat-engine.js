@@ -42,7 +42,7 @@
         if (String(opt.label).toLowerCase() === lower) return opt.value;
         if (String(opt.value).toLowerCase() === lower) return opt.value;
       }
-      return undefined; // not matched
+      return undefined;
     }
 
     function parseStep(step, raw) {
@@ -63,7 +63,6 @@
         var rule = prefillRules[i];
         var val;
         if (rule.parse === 'choice') {
-          // use rule.match map
           var lower = message.toLowerCase();
           var found = null;
           for (var slot in rule.match) {
@@ -89,8 +88,8 @@
 
     var answers = {};
     var fallbackIndex = 0;
-    var currentFlow = null;   // flow id string or null
-    var currentStep = null;   // step id string or null
+    var currentFlow = null;
+    var currentStep = null;
 
     // --- output builder ---
 
@@ -129,8 +128,7 @@
       if (!Array.isArray(result)) result = [];
       var nextId = result.length > 0 ? outputDef.onResults : outputDef.onEmpty;
       var nextOutput = getOutput(nextId);
-      var resp = buildResponse(nextOutput, result.length > 0 ? result : null);
-      return resp;
+      return buildResponse(nextOutput, result.length > 0 ? result : null);
     }
 
     // --- flow machinery ---
@@ -140,39 +138,29 @@
       if (!flow) throw new Error('Missing flow: ' + flowId);
       currentFlow = flowId;
       currentStep = flow.firstStep;
-
-      if (flow.prefillFromInput && triggerMessage) {
-        runPrefill(triggerMessage);
-      }
-
+      if (flow.prefillFromInput && triggerMessage) runPrefill(triggerMessage);
       return advanceFlow();
     }
 
-    // Advance through steps that are already filled (prefilled or optional-skipped)
-    // Returns the Response for the next unfilled step, or calls onComplete.
     function advanceFlow() {
       var flow = map.flows[currentFlow];
       while (currentStep !== null) {
         var step = getStep(flow, currentStep);
         if (answers.hasOwnProperty(step.save)) {
-          // prefilled — skip
           currentStep = step.next;
           continue;
         }
-        // ask this step
         return buildStepPrompt(step);
       }
-      // all steps done
       return completeFlow();
     }
 
     function buildStepPrompt(step) {
-      var message = getText(step.ask);
       var options = (step.options || []).map(function (opt, i) {
         return { key: '__step__' + currentFlow + '__' + currentStep + '__' + i, label: opt.label };
       });
       return {
-        message: message,
+        message: getText(step.ask),
         listings: null,
         followUp: null,
         options: options,
@@ -185,13 +173,11 @@
       currentFlow = null;
       currentStep = null;
       var onComplete = flow.onComplete;
-      if (onComplete.call) {
-        return callHandler(onComplete);
-      }
+      if (onComplete.call) return callHandler(onComplete);
       return buildResponse(onComplete);
     }
 
-    // --- global input check ---
+    // --- input matching ---
 
     function checkGlobalInputs(text) {
       var lower = text.toLowerCase();
@@ -205,8 +191,6 @@
       return null;
     }
 
-    // --- free-text input check ---
-
     function checkInputs(text) {
       var lower = text.toLowerCase();
       var inputs = map.inputs || [];
@@ -219,11 +203,10 @@
       return null;
     }
 
-    // --- dispatch an output id, handling startFlow / resumeFlow / call ---
+    // --- dispatch ---
 
     function dispatchOutput(outputId, triggerMessage) {
       var outputDef = getOutput(outputId);
-
       if (outputDef.clearAnswers) answers = {};
 
       if (outputDef.resumeFlow) {
@@ -235,25 +218,20 @@
       if (outputDef.startFlow) {
         var resp = buildResponse(outputDef);
         var flowResp = enterFlow(outputDef.startFlow, triggerMessage);
-        // merge: the startFlow output's message prefixes the step prompt
         if (resp.message) {
           flowResp = Object.assign({}, flowResp, {
-            message: resp.message + (resp.message && flowResp.message ? map.settings.joinWith : '') + flowResp.message,
+            message: resp.message + map.settings.joinWith + flowResp.message,
           });
         }
         return flowResp;
       }
 
-      if (outputDef.call) {
-        return callHandler(outputDef);
-      }
-
+      if (outputDef.call) return callHandler(outputDef);
       return buildResponse(outputDef);
     }
 
-    // --- step-option key encoding ---
+    // --- step key encoding ---
 
-    // Key format: __step__<flowId>__<stepId>__<index>
     function parseStepKey(key) {
       var m = key.match(/^__step__([^_]+(?:_[^_]+)*)__([^_]+(?:_[^_]+)*)__(\d+)$/);
       if (!m) return null;
@@ -281,7 +259,7 @@
     }
 
     function send(text) {
-      // 1. globalInputs — always first
+      // 1. globalInputs — always first, even mid-flow
       var globalMatch = checkGlobalInputs(text);
       if (globalMatch) {
         fallbackIndex = 0;
@@ -290,7 +268,7 @@
         return dispatchOutput(globalMatch, text);
       }
 
-      // 2. Inside a flow — parse against current step
+      // 2. Inside a flow — parse against the current step
       if (currentFlow !== null && currentStep !== null) {
         var flow = map.flows[currentFlow];
         var step = getStep(flow, currentStep);
@@ -299,19 +277,16 @@
         var isOptional = step.optional === true;
 
         if (!isParsed && !isOptional) {
-          // re-ask, do NOT advance, do NOT increment fallback
-          return buildStepPrompt(step);
+          return buildStepPrompt(step); // re-ask, no fallback increment
         }
 
-        if (isParsed || isOptional) {
-          answers[step.save] = isParsed ? parsed : null;
-          currentStep = step.next;
-          fallbackIndex = 0;
-          return advanceFlow();
-        }
+        answers[step.save] = isParsed ? parsed : null;
+        currentStep = step.next;
+        fallbackIndex = 0;
+        return advanceFlow();
       }
 
-      // 3. map.inputs (not in a flow)
+      // 3. map.inputs
       var inputMatch = checkInputs(text);
       if (inputMatch) {
         fallbackIndex = 0;
@@ -319,12 +294,10 @@
       }
 
       // 4. fallback
-      var fbId = getFallback();
-      return dispatchOutput(fbId, text);
+      return dispatchOutput(getFallback(), text);
     }
 
     function choose(key) {
-      // Check if it's a step option key
       var stepInfo = parseStepKey(key);
       if (stepInfo) {
         if (stepInfo.flowId !== currentFlow || stepInfo.stepId !== currentStep) {
@@ -340,11 +313,9 @@
         return advanceFlow();
       }
 
-      // It's a top-level option key
       if (!(key in map.options)) throw new Error('Unknown option key: ' + key);
       fallbackIndex = 0;
-      var outputId = map.options[key].output;
-      return dispatchOutput(outputId, null);
+      return dispatchOutput(map.options[key].output, null);
     }
 
     function reset() {
