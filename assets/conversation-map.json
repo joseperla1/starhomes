@@ -15,7 +15,7 @@
 
   "text": {
     "greeting": "Hey! 👋 I'm Cassie, your Star Homes guide.",
-    "capabilities": "Here's what I've got:\n\n🏠 Find you a place to rent or buy\n💸 Match you with a lender — coming soon\n🛋️ Help you find a roommate — coming soon",
+    "capabilities": "Here's what I can do:\n\n🏠 Find you a place to rent or buy\n💸 Match you with a lender — coming soon\n🛋️ Help you find a roommate",
     "cta": "Chicago's got options. Ready to find yours?",
     "start": "Let's do it! 🔥",
     "askMode": "First things first — are you looking to rent or buy?",
@@ -28,44 +28,72 @@
     "noMatch": "Nothing matching exactly — but I've got options just a little over budget. Want to see those, or should I widen the search area?",
     "stillNoMatch": "Still nothing, sorry! 😕 Want to try a different budget or area?",
     "lender": "Ooh, good call — lender matching is coming soon! 🔜\n\nRight now I'm all about finding you a place. Want to start there?",
-    "roommate": "Roommate matching is on the way! 🔜\n\nFor now, let's get you a place — you can always add a roommate to the mix later.",
+    "roommate": "Looking for a roommate? Smart move! 🛋️\n\nI can help you connect with potential matches in Chicago. Want to set your preferences first, or jump straight to the best ways to find someone?",
+    "roommateAskGender": "Let's find your perfect match! First — do you have a gender preference for your roommate?",
+    "roommateAskAge": "Got it! What age range are you looking for in a roommate?",
+    "roommateAskLifestyle": "Almost there — what lifestyle fits best with yours?",
+    "roommateAvenues": "Here are your best bets for finding a roommate in Chicago! 🏙️\n\n📘 Facebook Groups — search 'Chicago Roommates' or 'Chicago Housing' for active communities\n🌐 Roomies.com — post a listing and browse matches\n📋 Craigslist Chicago — classic and still very active\n💬 SpareRoom — popular app for finding rooms and roommates\n\nAre you on Facebook? I can point you to the best Chicago roommate groups!",
+    "roommateFacebook": "Love it! Here are the top Facebook groups to join for Chicago roommates:\n\n• Chicago Roommates and Rooms For Rent — large, very active group\n• Chicago Housing, Rooms and Roommates — great mix of renters\n• Chicago Young Professionals Housing — perfect for ages 21-35\n• Roommates in Chicago (All Areas) — citywide listings\n\nPro tip: Post a short intro with your budget, preferred area, and move-in date to get the best responses! 🌟",
     "about": "We're Star Homes — a Chicago crew helping people find places they actually want to live. Renting, buying, all of it. 🏙️",
     "restart": "No problem, starting fresh! ✨",
     "fallback1": "Hmm, didn't quite catch that! 🤔 Try one of these:",
-    "fallback2": "Still not getting it — my bad! Tap a button below and I'll take it from there. 👇",
-    "connectFacebook": "Sure! Let me pull up the Facebook connect screen for you. 📱\n\nLinking your account lets Star Homes send you personalised property alerts and keeps your searches synced.",
-    "fbLinked": "Your Facebook account (@johnpork) is now linked to Star Homes! 🎉\n\nYou'll get personalised property alerts and all your searches will be saved automatically. Ready to find a place?"
+    "fallback2": "Still not getting it — my bad! Tap a button below and I'll take it from there. 👇"
   },
 
   "options": {
-    "go": { "label": "Let's go 🔎", "output": "start" },
-    "findPlace": { "label": "Find me a place", "output": "start" },
-    "about": { "label": "What's Star Homes?", "output": "about" },
-    "menu": { "label": "Show me the menu", "output": "menu" },
-    "whatCanYouDo": { "label": "What can you do?", "output": "menu" },
-    "showOver": { "label": "Show me those", "output": "searchRelaxed" },
-    "widen": { "label": "Widen the search", "output": "askAreaAgain" },
-    "connectFb": { "label": "Connect Facebook 🔗", "output": "connectFacebook" }
+    "go":           { "label": "Let's go 🔎",          "output": "start" },
+    "findPlace":    { "label": "Find me a place",       "output": "start" },
+    "about":        { "label": "What's Star Homes?",    "output": "about" },
+    "menu":         { "label": "Show me the menu",      "output": "menu" },
+    "whatCanYouDo": { "label": "What can you do?",      "output": "menu" },
+    "showOver":     { "label": "Show me those",         "output": "searchRelaxed" },
+    "widen":        { "label": "Widen the search",      "output": "askAreaAgain" },
+
+    "roommateBtn":     { "label": "Find a roommate 🛋️",    "output": "roommate" },
+    "setPrefs":        { "label": "Set my preferences",    "output": "roommateAskGender" },
+    "skipToAvenues":   { "label": "Show me how to find one", "output": "roommateAvenues" },
+    "skipRoommate":    { "label": "Back to finding a place", "output": "start" },
+
+    "genderMale":   { "label": "Male preferred 👨",     "output": "roommateAskAge" },
+    "genderFemale": { "label": "Female preferred 👩",   "output": "roommateAskAge" },
+    "genderAny":    { "label": "No preference",         "output": "roommateAskAge" },
+
+    "age1825":  { "label": "18–25",    "output": "roommateAskLifestyle" },
+    "age2635":  { "label": "26–35",    "output": "roommateAskLifestyle" },
+    "age36plus":{ "label": "36+",      "output": "roommateAskLifestyle" },
+    "ageAny":   { "label": "Any age",  "output": "roommateAskLifestyle" },
+
+    "lifestyleNight":  { "label": "Night owl 🦉",        "output": "roommateAvenues" },
+    "lifestyleEarly":  { "label": "Early bird ☀️",       "output": "roommateAvenues" },
+    "lifestyleSocial": { "label": "Social butterfly 🦋", "output": "roommateAvenues" },
+    "lifestyleQuiet":  { "label": "Quiet and chill 🎧",  "output": "roommateAvenues" },
+
+    "onFacebook": { "label": "I'm on Facebook! 📘", "output": "roommateFacebook" }
   },
 
   "outputs": {
-    "welcome": { "text": ["greeting", "capabilities", "cta"], "options": ["go", "about", "connectFb"] },
-    "menu": { "text": ["capabilities", "cta"], "options": ["go", "about", "connectFb"] },
-    "start": { "text": ["start"], "options": [], "startFlow": "propertySearch" },
-    "lender": { "text": ["lender"], "options": ["go", "menu"] },
-    "roommate": { "text": ["roommate"], "options": ["findPlace", "menu"] },
-    "about": { "text": ["about"], "options": ["findPlace", "menu"] },
-    "restart": { "text": ["restart", "capabilities", "cta"], "options": ["go", "about"], "clearAnswers": true },
-    "fallback1": { "text": ["fallback1"], "options": ["findPlace", "whatCanYouDo"] },
-    "fallback2": { "text": ["fallback2"], "options": ["findPlace", "whatCanYouDo"] },
-    "results": { "text": ["results"], "options": [], "renderListings": true, "then": "afterResults" },
-    "afterResults": { "text": ["afterResults"], "options": [] },
-    "noMatch": { "text": ["noMatch"], "options": ["showOver", "widen"] },
-    "stillNoMatch": { "text": ["stillNoMatch"], "options": ["findPlace", "menu"] },
+    "welcome":    { "text": ["greeting", "capabilities", "cta"], "options": ["go", "roommateBtn", "about"] },
+    "menu":       { "text": ["capabilities", "cta"],             "options": ["go", "roommateBtn", "about"] },
+    "start":      { "text": ["start"],  "options": [], "startFlow": "propertySearch" },
+    "lender":     { "text": ["lender"], "options": ["go", "menu"] },
+    "about":      { "text": ["about"],  "options": ["findPlace", "roommateBtn", "menu"] },
+    "restart":    { "text": ["restart", "capabilities", "cta"], "options": ["go", "roommateBtn", "about"], "clearAnswers": true },
+    "fallback1":  { "text": ["fallback1"], "options": ["findPlace", "whatCanYouDo"] },
+    "fallback2":  { "text": ["fallback2"], "options": ["findPlace", "whatCanYouDo"] },
+
+    "results":     { "text": ["results"],     "options": [], "renderListings": true, "then": "afterResults" },
+    "afterResults":{ "text": ["afterResults"], "options": ["roommateBtn", "menu"] },
+    "noMatch":     { "text": ["noMatch"],      "options": ["showOver", "widen"] },
+    "stillNoMatch":{ "text": ["stillNoMatch"], "options": ["findPlace", "menu"] },
     "searchRelaxed": { "text": ["searching"], "options": [], "call": "searchListings", "relaxed": true, "onResults": "results", "onEmpty": "stillNoMatch" },
-    "askAreaAgain": { "text": ["askArea"], "options": [], "resumeFlow": "propertySearch", "atStep": "area" },
-    "connectFacebook": { "text": ["connectFacebook"], "options": [], "event": "FACEBOOK_CONNECT" },
-    "fbLinked": { "text": ["fbLinked"], "options": ["go", "menu"] }
+    "askAreaAgain":  { "text": ["askArea"],   "options": [], "resumeFlow": "propertySearch", "atStep": "area" },
+
+    "roommate":           { "text": ["roommate"],           "options": ["setPrefs", "skipToAvenues", "skipRoommate"] },
+    "roommateAskGender":  { "text": ["roommateAskGender"],  "options": ["genderMale", "genderFemale", "genderAny"] },
+    "roommateAskAge":     { "text": ["roommateAskAge"],     "options": ["age1825", "age2635", "age36plus", "ageAny"] },
+    "roommateAskLifestyle":{ "text": ["roommateAskLifestyle"], "options": ["lifestyleNight", "lifestyleEarly", "lifestyleSocial", "lifestyleQuiet"] },
+    "roommateAvenues":    { "text": ["roommateAvenues"],    "options": ["onFacebook", "findPlace", "menu"] },
+    "roommateFacebook":   { "text": ["roommateFacebook"],   "options": ["findPlace", "roommateBtn", "menu"] }
   },
 
   "flows": {
@@ -77,7 +105,7 @@
           "ask": "askMode",
           "options": [
             { "label": "Rent", "value": "rent" },
-            { "label": "Buy", "value": "buy" }
+            { "label": "Buy",  "value": "buy"  }
           ],
           "save": "mode",
           "parse": "choice",
@@ -86,9 +114,9 @@
         "budget": {
           "ask": "askBudget",
           "options": [
-            { "label": "Under $1,500", "value": 1500 },
-            { "label": "$1,500–2,500", "value": 2500 },
-            { "label": "Not sure", "value": null }
+            { "label": "Under $1,500",  "value": 1500 },
+            { "label": "$1,500–2,500",  "value": 2500 },
+            { "label": "Not sure",      "value": null  }
           ],
           "save": "budget",
           "parse": "number",
@@ -99,9 +127,9 @@
           "ask": "askBedrooms",
           "options": [
             { "label": "Studio", "value": 0 },
-            { "label": "1", "value": 1 },
-            { "label": "2", "value": 2 },
-            { "label": "3+", "value": 3 }
+            { "label": "1",      "value": 1 },
+            { "label": "2",      "value": 2 },
+            { "label": "3+",     "value": 3 }
           ],
           "save": "bedrooms",
           "parse": "number",
@@ -128,22 +156,22 @@
   },
 
   "globalInputs": [
-    { "keywords": ["start over", "restart", "go back", "never mind", "nevermind", "reset"], "output": "restart" },
+    { "keywords": ["start over", "restart", "go back", "never mind", "nevermind", "reset", "exit"], "output": "restart" },
     { "keywords": ["menu", "help", "options", "what can you do", "what do you do"], "output": "menu" }
   ],
 
   "inputs": [
     { "keywords": ["lender", "loan", "mortgage", "financing", "finance", "credit", "afford"], "output": "lender" },
-    { "keywords": ["roommate", "roomie", "housemate", "share a place", "sharing"], "output": "roommate" },
+    { "keywords": ["roommate", "roomie", "housemate", "share a place", "sharing", "split rent", "looking for someone to share"], "output": "roommate" },
+    { "keywords": ["facebook", "fb", "facebook.com", "fb.com", "my facebook", "facebook group", "fb group", "facebook page"], "output": "roommateFacebook" },
     { "keywords": ["star homes", "about you", "who are you", "what is this", "company"], "output": "about" },
-    { "keywords": ["let's go", "lets go", "yes", "yeah", "yep", "sure", "start", "find", "place", "apartment", "rent", "buy", "looking", "search", "browse"], "output": "start" },
-    { "keywords": ["connect facebook", "connect my facebook", "link facebook", "facebook messenger", "connect messenger", "connect to facebook", "facebook account", "link my facebook", "connect social", "sign in with facebook", "login with facebook"], "output": "connectFacebook" }
+    { "keywords": ["let's go", "lets go", "yes", "yeah", "yep", "sure", "start", "find", "place", "apartment", "rent", "buy", "looking", "search", "browse"], "output": "start" }
   ],
 
   "prefill": [
     { "slot": "budget", "parse": "number" },
-    { "slot": "mode", "parse": "choice", "match": { "rent": ["rent", "renting", "rental"], "buy": ["buy", "buying", "purchase", "own"] } },
-    { "slot": "bedrooms", "parse": "bedrooms" }
+    { "slot": "mode",   "parse": "choice", "match": { "rent": ["rent", "renting", "rental"], "buy": ["buy", "buying", "purchase", "own"] } },
+    { "slot": "bedrooms","parse": "bedrooms" }
   ],
 
   "fallback": ["fallback1", "fallback2"]
