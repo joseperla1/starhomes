@@ -105,11 +105,12 @@
       var texts = (outputDef.text || []).map(getText);
       var message = texts.join(map.settings.joinWith);
       var then = outputDef.then || null;
+      var thenDef = (then && map.outputs[then]) ? map.outputs[then] : null;
       return {
         message: message,
         listings: listings !== undefined ? listings : null,
         followUp: then ? getText(then) : null,
-        options: buildOptions(outputDef),
+        options: buildOptions(thenDef || outputDef),
         event: outputDef.event || null,
       };
     }

@@ -38,7 +38,8 @@
     "resetHint": "Tip: type \"reset\" at any point to start over.",
     "restart": "No problem, starting fresh! ✨",
     "fallback1": "Hmm, didn't quite catch that! 🤔 Try one of these:",
-    "fallback2": "Still not getting it — my bad! Tap a button below and I'll take it from there. 👇"
+    "fallback2": "Still not getting it — my bad! Tap a button below and I'll take it from there. 👇",
+    "fbIntro": "I can connect your Facebook Messenger account so you receive property updates and can message us directly! 📱\n\nTap the button below to link your account — it only takes a moment."
   },
 
   "options": {
@@ -69,7 +70,10 @@
     "lifestyleSocial": { "label": "Social butterfly 🦋", "output": "roommateAvenues" },
     "lifestyleQuiet":  { "label": "Quiet and chill 🎧",  "output": "roommateAvenues" },
 
-    "onFacebook": { "label": "I'm on Facebook! 📘", "output": "roommateFacebook" }
+    "onFacebook": { "label": "I'm on Facebook! 📘", "output": "roommateFacebook" },
+
+    "fbOffer":   { "label": "Connect Facebook",        "output": "fbMessenger" },
+    "fbConnect": { "label": "Connect Facebook",        "output": "fbMessenger" }
   },
 
   "outputs": {
@@ -83,7 +87,8 @@
     "fallback2":  { "text": ["fallback2"], "options": ["findPlace", "whatCanYouDo"] },
 
     "results":     { "text": ["results"],     "options": [], "renderListings": true, "then": "afterResults" },
-    "afterResults":{ "text": ["afterResults"], "options": ["roommateBtn", "menu"] },
+    "afterResults":{ "text": ["afterResults"], "options": ["roommateBtn", "whatCanYouDo", "about"] },
+    "fbMessenger": { "text": ["fbIntro"], "options": ["fbConnect"] },
     "noMatch":     { "text": ["noMatch"],      "options": ["showOver", "widen"] },
     "stillNoMatch":{ "text": ["stillNoMatch"], "options": ["findPlace", "menu"] },
     "searchRelaxed": { "text": ["searching"], "options": [], "call": "searchListings", "relaxed": true, "onResults": "results", "onEmpty": "stillNoMatch" },
