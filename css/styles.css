@@ -152,19 +152,44 @@ address { font-style: normal; }
   top: 0;
   z-index: 100;
   background: var(--white);
-  border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+  border-bottom: 3px solid var(--gold);
+  box-shadow: 0 2px 20px rgba(27,42,74,.13);
 }
 
 .nav-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 72px;
+  height: 108px;
+  gap: 24px;
 }
 
-.logo-link { display: flex; align-items: center; }
-.logo { height: 52px; width: auto; object-fit: contain; }
+.logo-link {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  /* slight drop shadow to lift logo off white bg */
+  /* filter: drop-shadow(0 2px 8px rgba(27,42,74,.18)); */
+  transition: filter var(--transition), transform var(--transition);
+}
+.logo-link:hover {
+  /* filter: drop-shadow(0 4px 14px rgba(201,168,76,.35)); */
+  transform: translateY(-1px);
+}
+
+.logo { height: 90px; width: auto; object-fit: contain; }
+
+/* Gold vertical rule between logo and nav */
+.nav-container::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 56px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  flex-shrink: 0;
+  margin-right: auto;
+  margin-left: 28px;
+}
 
 .primary-nav { display: flex; }
 
@@ -752,7 +777,7 @@ address { font-style: normal; }
 }
 
 .footer-brand { display: flex; flex-direction: column; gap: 10px; }
-.footer-logo { height: 44px; width: auto; object-fit: contain; }
+.footer-logo { height: 72px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,.25)); }
 .footer-tagline { font-size: .82rem; color: rgba(255,255,255,.45); max-width: 220px; }
 
 .footer-nav { justify-self: center; }
@@ -772,6 +797,263 @@ address { font-style: normal; }
 }
 
 /* =====================================================
+   ABOUT PAGE — Active nav state
+   ===================================================== */
+.nav-active {
+  color: var(--navy) !important;
+}
+.nav-active::after {
+  width: 100% !important;
+}
+
+/* =====================================================
+   ABOUT PAGE — Hero
+   ===================================================== */
+.about-hero {
+  position: relative;
+  min-height: min(72vh, 580px);
+  display: flex;
+  align-items: center;
+  background: linear-gradient(155deg, var(--navy-dark) 0%, var(--navy) 55%, #2A3F6A 100%);
+  overflow: hidden;
+  text-align: center;
+}
+
+.about-hero-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, rgba(201,168,76,.1) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.about-hero-skyline {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 140px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 140' preserveAspectRatio='none'%3E%3Cpath fill='%230F1B31' fill-opacity='0.5' d='M0,140 L0,110 L40,110 L40,90 L60,90 L60,70 L80,70 L80,50 L100,50 L100,70 L120,70 L120,30 L130,30 L130,15 L140,15 L140,30 L150,30 L150,70 L170,70 L170,45 L180,45 L180,30 L190,30 L190,45 L200,45 L200,70 L240,70 L240,50 L255,50 L255,35 L265,35 L265,50 L280,50 L280,70 L340,70 L340,55 L360,55 L360,35 L375,35 L375,20 L385,20 L385,35 L400,35 L400,55 L440,55 L440,75 L480,75 L480,55 L495,55 L495,35 L510,35 L510,20 L520,20 L520,35 L535,35 L535,55 L570,55 L570,80 L600,80 L600,55 L615,55 L615,35 L628,35 L628,20 L638,20 L638,35 L650,35 L650,55 L690,55 L690,75 L730,75 L730,55 L745,55 L745,35 L758,35 L758,20 L768,20 L768,35 L780,35 L780,55 L820,55 L820,75 L860,75 L860,55 L875,55 L875,35 L888,35 L888,20 L898,20 L898,35 L910,35 L910,55 L950,55 L950,80 L990,80 L990,60 L1005,60 L1005,40 L1018,40 L1018,25 L1028,25 L1028,40 L1040,40 L1040,60 L1080,60 L1080,80 L1120,80 L1120,60 L1135,60 L1135,40 L1148,40 L1148,25 L1158,25 L1158,40 L1170,40 L1170,60 L1210,60 L1210,85 L1260,85 L1260,100 L1320,100 L1320,115 L1380,115 L1380,125 L1440,125 L1440,140 Z'/%3E%3C/svg%3E");
+  background-size: cover;
+  background-position: bottom;
+  pointer-events: none;
+}
+
+.about-hero-content {
+  position: relative;
+  z-index: 1;
+  padding-block: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about-hero-logo-wrap {
+  margin-bottom: 28px;
+  filter: drop-shadow(0 8px 32px rgba(0,0,0,.35));
+}
+
+.about-hero-logo {
+  width: 260px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* =====================================================
+   ABOUT PAGE — Story Section
+   ===================================================== */
+.story-section { background: var(--off-white); }
+
+.story-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
+}
+
+.story-title { text-align: left; }
+
+.story-body {
+  font-size: 1.02rem;
+  color: var(--text-muted);
+  line-height: 1.75;
+  margin-bottom: 18px;
+}
+
+.story-cta { margin-top: 10px; }
+
+.story-stats-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.story-stat {
+  background: var(--navy);
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: background var(--transition);
+}
+.story-stat:hover { background: var(--navy-mid); }
+
+.story-stat:nth-child(even) { background: var(--navy-mid); }
+.story-stat:nth-child(even):hover { background: var(--navy); }
+
+.story-stat-number {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.story-stat-label {
+  font-size: .82rem;
+  color: rgba(255,255,255,.62);
+  line-height: 1.4;
+}
+
+/* =====================================================
+   ABOUT PAGE — Values Section
+   ===================================================== */
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.value-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 40px 32px;
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+.value-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+}
+
+.value-card--featured {
+  background: var(--navy);
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px var(--gold-light), var(--shadow-sm);
+}
+.value-card--featured .value-title { color: var(--white); }
+.value-card--featured .value-body  { color: rgba(255,255,255,.72); }
+
+.value-icon {
+  width: 56px; height: 56px;
+  background: var(--navy);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 22px;
+}
+.value-icon svg {
+  width: 28px; height: 28px;
+  stroke: var(--gold);
+}
+
+.value-icon--gold {
+  background: var(--gold);
+}
+.value-icon--gold svg { stroke: var(--navy-dark); }
+
+.value-title {
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+}
+
+.value-body {
+  font-size: .95rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* =====================================================
+   ABOUT PAGE — Chicago Focus Section
+   ===================================================== */
+.chicago-section {
+  background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, var(--navy-mid) 100%);
+  border-top: 3px solid var(--gold);
+}
+
+.chicago-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
+}
+
+.chicago-eyebrow { color: var(--gold) !important; }
+
+.chicago-title { color: var(--white) !important; }
+
+.chicago-body {
+  color: rgba(255,255,255,.72);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  margin-bottom: 32px;
+}
+
+.neighborhoods-label {
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 16px;
+}
+
+.neighborhoods-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+}
+
+.neighborhood-tag {
+  display: inline-block;
+  padding: 7px 16px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(201,168,76,.3);
+  border-radius: 40px;
+  font-size: .83rem;
+  color: rgba(255,255,255,.82);
+  transition: background var(--transition), border-color var(--transition), color var(--transition);
+  cursor: default;
+}
+.neighborhood-tag:hover {
+  background: rgba(201,168,76,.18);
+  border-color: var(--gold);
+  color: var(--white);
+}
+
+/* =====================================================
+   ABOUT PAGE — Responsive
+   ===================================================== */
+@media (max-width: 900px) {
+  .story-inner    { grid-template-columns: 1fr; gap: 48px; }
+  .story-title    { text-align: center; }
+  .story-cta      { display: block; text-align: center; }
+  .chicago-inner  { grid-template-columns: 1fr; gap: 48px; }
+  .values-grid    { grid-template-columns: 1fr; }
+  .about-hero-logo { width: 200px; }
+}
+
+@media (max-width: 600px) {
+  .story-stats-block { grid-template-columns: 1fr 1fr; }
+  .story-stat { padding: 24px 18px; }
+  .story-stat-number { font-size: 1.7rem; }
+  .about-hero-logo { width: 160px; }
+  .value-card { padding: 28px 22px; }
+}
+
+/* =====================================================
    HIDE MOBILE helper
    ===================================================== */
 @media (max-width: 640px) { .hide-mobile { display: none; } }
@@ -784,9 +1066,13 @@ address { font-style: normal; }
 
   .nav-toggle { display: flex; }
 
+  .nav-container { height: 88px; }
+  .logo { height: 72px; }
+  .nav-container::after { display: none; }
+
   .primary-nav {
     position: fixed;
-    inset: 72px 0 0;
+    inset: 88px 0 0;
     background: var(--white);
     flex-direction: column;
     align-items: center;
@@ -794,7 +1080,7 @@ address { font-style: normal; }
     padding-top: 40px;
     transform: translateX(100%);
     transition: transform 280ms ease;
-    border-top: 1px solid var(--border);
+    border-top: 3px solid var(--gold);
     box-shadow: var(--shadow-lg);
   }
   .primary-nav.nav-open { transform: translateX(0); }
@@ -811,7 +1097,7 @@ address { font-style: normal; }
 
   .footer-inner { grid-template-columns: 1fr; text-align: center; gap: 24px; }
   .footer-brand { align-items: center; }
-  .footer-logo { margin-inline: auto; }
+  .footer-logo { margin-inline: auto; height: 60px; }
   .footer-tagline { text-align: center; }
   .footer-legal { text-align: center; }
 }
@@ -821,6 +1107,8 @@ address { font-style: normal; }
    ===================================================== */
 @media (max-width: 600px) {
   :root { --section-py: 48px; }
+  .nav-container { height: 76px; }
+  .logo { height: 58px; }
 
   .hero-content { padding-block: 56px 40px; }
   .hero-stats { gap: 20px; }
